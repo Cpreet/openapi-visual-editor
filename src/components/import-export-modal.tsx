@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Download, Upload, FileText, X as XIcon, LoaderPinwheel, LoaderIcon } from "lucide-react";
+import { Download, Upload, FileText, X as XIcon, LoaderIcon } from "lucide-react";
 import {
   loadOpenApiSchemaFromJSON,
   loadOpenApiSchemaFromYAML,
@@ -42,9 +42,10 @@ export function ImportExportModal({ isOpen, onClose }: ImportExportModalProps) {
         } else {
           content = importContent
         }
+      } else {
+        content = importContent
       }
 
-      console.log(content)
       const lang = detectSchemaLanguage(content)
       if (!lang) throw new Error("Not a recognised markup")
       if (lang === "json") {
@@ -77,20 +78,22 @@ export function ImportExportModal({ isOpen, onClose }: ImportExportModalProps) {
       const content = e.target?.result as string;
 
       try {
-        const schemaType = detectSchemaStandard(content);
-
-        if (schemaType === "openapi") {
-          const extension = file.name.split(".").pop()?.toLowerCase();
-          if (extension === "yaml" || extension === "yml") {
-            loadOpenApiSchemaFromYAML(content);
-          } else {
-            loadOpenApiSchemaFromJSON(content);
-          }
-        } else {
-          // TODO: Load Arazzo schema
-          return;
+        const lang = detectSchemaLanguage(content)
+        if (!lang) throw new Error("Not a recognised markup")
+        if (lang === "json") {
+          const standard = detectSchemaStandard(JSON.parse(content))
+          if (!standard) throw new Error("Not a recognied standard")
+          if (standard === "arazzo") throw new Error("Arazzo support yet to be implemented")
+          if (standard === "openapi") loadOpenApiSchemaFromJSON(content)
         }
-        onClose();
+        if (lang === "yaml") {
+          const standard = detectSchemaStandard(YAML.parse(content))
+          if (!standard) throw new Error("Not a recognied standard")
+          if (standard === "arazzo") throw new Error("Arazzo support yet to be implemented")
+          if (standard === "openapi") loadOpenApiSchemaFromYAML(content)
+        }
+
+        onClose()
       } catch (err) {
         setError(
           err instanceof Error ? err.message : "Failed to import schema"
