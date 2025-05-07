@@ -2,6 +2,8 @@ import { BrowserRouter as RouterProvider, Route, Routes } from "react-router"
 import { ThemeProvider } from "@/components/theme-provider"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import AppSidebar from "./components/app-sidebar"
+import Toolbar from "./components/toolbar"
+import SchemaViewer from "./components/schema-viewer"
 
 function App() {
 
@@ -11,9 +13,10 @@ function App() {
         <SidebarProvider>
           <AppSidebar />
           <SidebarInset>
+            <Toolbar />
             <main>
               <Routes>
-                <Route path="/" element={<></>} />
+                <Route path="/" element={<SchemaViewer />} />
               </Routes>
             </main>
           </SidebarInset>

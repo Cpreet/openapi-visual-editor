@@ -31,7 +31,7 @@ const AppSidebar = () => {
   const { theme, setTheme } = useTheme();
 
   return (
-    <Sidebar collapsible="icon" variant="inset">
+    <Sidebar collapsible="offcanvas" variant="inset">
       <SidebarHeader>
         <div className="flex items-center gap-2">
           <File className="size-6" />
