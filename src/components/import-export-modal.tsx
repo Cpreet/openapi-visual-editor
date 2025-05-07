@@ -1,16 +1,17 @@
 import { useState, useRef } from "react";
+import * as YAML from "yaml";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Download, Upload, Link, FileText, X as XIcon } from "lucide-react";
+import { Download, Upload, FileText, X as XIcon, LoaderPinwheel, LoaderIcon } from "lucide-react";
 import {
   loadOpenApiSchemaFromJSON,
   loadOpenApiSchemaFromYAML,
+  useOpenApiStore,
 } from "@/lib/store";
-import { useOpenApiStore } from "@/lib/store";
-import * as YAML from "yaml";
+import { detectSchemaStandard, detectSchemaLanguage } from "@/lib/utils";
 
 interface ImportExportModalProps {
   isOpen: boolean;
@@ -26,77 +27,44 @@ export function ImportExportModal({ isOpen, onClose }: ImportExportModalProps) {
   const openApi = useOpenApiStore((state) => state.openApi);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const detectSchemaType = (content: string): "openapi" | "arazzo" => {
-    try {
-      const parsed = JSON.parse(content);
-      if (Object.keys(parsed).includes("arazzo")) {
-        return "arazzo";
-      }
 
-      if (Object.keys(parsed).includes("openapi")) {
-        return "openapi";
-      }
+  const handleImport = async () => {
+    if (!importContent && !importUrl) return;
 
-      return "openapi";
-    } catch {
-      return "openapi";
-    }
-  };
-
-  const handleImportFromUrl = async () => {
-    if (!importUrl) return;
-
-    setIsLoading(true);
     setError(null);
 
     try {
-      const response = await fetch(importUrl);
-      if (!response.ok) throw new Error("Failed to fetch schema");
-
-      const content = await response.text();
-      const schemaType = detectSchemaType(content);
-
-      if (schemaType === "openapi") {
-        const extension = importUrl.split(".").pop()?.toLowerCase();
-        if (extension === "yaml" || extension === "yml") {
-          loadOpenApiSchemaFromYAML(content);
+      let content = "";
+      if (importUrl) {
+        const resp = await fetch(importUrl);
+        if (resp.ok) {
+          content = await resp.text()
         } else {
-          loadOpenApiSchemaFromJSON(content);
+          content = importContent
         }
-      } else {
-        // TODO: Load Arazzo schema
-        return;
+      }
+
+      console.log(content)
+      const lang = detectSchemaLanguage(content)
+      if (!lang) throw new Error("Not a recognised markup")
+      if (lang === "json") {
+        const standard = detectSchemaStandard(JSON.parse(content))
+        if (!standard) throw new Error("Not a recognied standard")
+        if (standard === "arazzo") throw new Error("Arazzo support yet to be implemented")
+        if (standard === "openapi") loadOpenApiSchemaFromJSON(content)
+      }
+      if (lang === "yaml") {
+        const standard = detectSchemaStandard(YAML.parse(content))
+        if (!standard) throw new Error("Not a recognied standard")
+        if (standard === "arazzo") throw new Error("Arazzo support yet to be implemented")
+        if (standard === "openapi") loadOpenApiSchemaFromYAML(content)
       }
 
       onClose();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to import schema");
     } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleImportFromContent = () => {
-    if (!importContent) return;
-
-    setError(null);
-
-    try {
-      const schemaType = detectSchemaType(importContent);
-
-      if (schemaType === "openapi") {
-        try {
-          loadOpenApiSchemaFromJSON(importContent);
-        } catch {
-          loadOpenApiSchemaFromYAML(importContent);
-        }
-      } else {
-        // TODO: Load Arazzo schema
-        return;
-      }
-      onClose();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to import schema");
+      setIsLoading(false)
     }
   };
 
@@ -109,7 +77,7 @@ export function ImportExportModal({ isOpen, onClose }: ImportExportModalProps) {
       const content = e.target?.result as string;
 
       try {
-        const schemaType = detectSchemaType(content);
+        const schemaType = detectSchemaStandard(content);
 
         if (schemaType === "openapi") {
           const extension = file.name.split(".").pop()?.toLowerCase();
@@ -186,13 +154,6 @@ export function ImportExportModal({ isOpen, onClose }: ImportExportModalProps) {
                     value={importUrl}
                     onChange={(e) => setImportUrl(e.target.value)}
                   />
-                  <Button
-                    onClick={handleImportFromUrl}
-                    disabled={!importUrl || isLoading}
-                  >
-                    <Link className="size-4 mr-2" />
-                    Import
-                  </Button>
                 </div>
               </div>
 
@@ -226,11 +187,14 @@ export function ImportExportModal({ isOpen, onClose }: ImportExportModalProps) {
                   className="mt-1 min-h-32 max-h-36 font-mono"
                 />
                 <Button
-                  onClick={handleImportFromContent}
-                  disabled={!importContent}
+                  onClick={() => { setIsLoading(true); handleImport() }}
+                  disabled={!importContent && !importUrl}
                   className="mt-2"
                 >
-                  <Upload className="size-4 mr-2" />
+                  {isLoading ?
+                    <LoaderIcon className="size-4" />
+                    : <Upload className="size-4 mr-2" />
+                  }
                   Import
                 </Button>
               </div>
