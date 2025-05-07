@@ -7,7 +7,7 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Info, Route, Component } from "lucide-react";
-import { useCheckConnections } from "@/hooks/useCheckConnection";
+import { useCheckConnections } from "@/hooks/use-check-connections";
 import { SchemaOverview } from "./schema-overview";
 import { Endpoints } from "./endpoints";
 import { Components } from "./components";
