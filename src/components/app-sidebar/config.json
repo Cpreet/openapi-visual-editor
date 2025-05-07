@@ -1,0 +1,123 @@
+{
+  "groups": [
+    {
+      "id": "schema",
+      "label": "Schema",
+      "path": "/",
+      "items": [
+        {
+          "id": "info",
+          "label": "Info",
+          "icon": "info",
+          "isDynamic": false,
+          "action": "plus",
+          "path": "/info"
+        },
+        {
+          "id": "servers",
+          "label": "Servers",
+          "icon": "server",
+          "isDynamic": true,
+          "action": "plus",
+          "path": "/servers"
+        },
+        {
+          "id": "paths",
+          "label": "Paths",
+          "icon": "route",
+          "isDynamic": true,
+          "action": "plus",
+          "path": "/paths"
+        },
+        {
+          "id": "components",
+          "label": "Components",
+          "icon": "component",
+          "isDynamic": true,
+          "action": "plus",
+          "path": "/components"
+        },
+        {
+          "id": "security",
+          "label": "Security",
+          "icon": "shield",
+          "isDynamic": true,
+          "action": "plus",
+          "path": "/security"
+        },
+        {
+          "id": "tags",
+          "label": "Tags",
+          "icon": "tag",
+          "isDynamic": true,
+          "action": "plus",
+          "path": "/tags"
+        },
+        {
+          "id": "externalDocs",
+          "label": "External Docs",
+          "icon": "file-text",
+          "isDynamic": true,
+          "action": "plus",
+          "path": "/externalDocs"
+        }
+      ]
+    },
+    {
+      "id": "workflows",
+      "label": "Workflows",
+      "icon": "workflow",
+      "path": "/workflows",
+      "items": [
+        {
+          "id": "workflows-info",
+          "label": "Info",
+          "icon": "info",
+          "isDynamic": true,
+          "action": "plus",
+          "path": "/workflows/info"
+        },
+        {
+          "id": "workflows-sources",
+          "label": "Sources",
+          "icon": "target",
+          "isDynamic": true,
+          "action": "plus",
+          "path": "/workflows/sources"
+        },
+        {
+          "id": "workflows-workflows",
+          "label": "Workflows",
+          "icon": "workflow",
+          "isDynamic": true,
+          "action": "plus",
+          "path": "/workflows/workflows"
+        },
+        {
+          "id": "workflows-components",
+          "label": "Components",
+          "icon": "component",
+          "isDynamic": true,
+          "action": "plus",
+          "path": "/workflows/components"
+        }
+      ]
+    },
+    {
+      "id": "tools",
+      "label": "Tools",
+      "icon": "wrench",
+      "path": "/tools",
+      "items": [
+        {
+          "id": "api-list",
+          "label": "API List",
+          "icon": "scroll-text",
+          "isDynamic": false,
+          "action": "plus",
+          "path": "/tools/api-list"
+        }
+      ]
+    }
+  ]
+}
