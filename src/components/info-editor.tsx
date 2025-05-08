@@ -1,21 +1,13 @@
-import { useEffect, useState } from "react";
+import type { OpenAPIV3 } from "openapi-types";
+
 import { useOpenApiStore } from "@/lib/store";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { ScrollArea } from "./ui/scroll-area";
 import { FileText, Mail, Link, User, Shield } from "lucide-react";
-import type { OpenAPIV3 } from "openapi-types";
 
 export const InfoEditor = () => {
-  const { openApi } = useOpenApiStore();
-  const [info, setInfo] = useState<OpenAPIV3.InfoObject>({
-    title: "",
-    version: ""
-  });
-
-  useEffect(() => {
-    if (openApi?.info) setInfo(openApi?.info);
-  }, [openApi]);
+  const { openApi, setOpenApi } = useOpenApiStore();
 
   if (!openApi) {
     return (
@@ -31,6 +23,16 @@ export const InfoEditor = () => {
       </div>
     );
   }
+
+  const updateInfo = (updates: Partial<OpenAPIV3.InfoObject>) => {
+    setOpenApi({
+      ...openApi,
+      info: {
+        ...openApi.info,
+        ...updates,
+      },
+    });
+  };
 
   return (
     <div className="h-full flex flex-col">
@@ -51,10 +53,8 @@ export const InfoEditor = () => {
                 <div className="space-y-2">
                   <Label>Title</Label>
                   <Input
-                    value={info.title}
-                    onChange={(e) =>
-                      setInfo({ ...info, title: e.target.value })
-                    }
+                    value={openApi.info?.title ?? ""}
+                    onChange={(e) => updateInfo({ title: e.target.value })}
                     placeholder="My API"
                     className="font-medium"
                   />
@@ -62,10 +62,8 @@ export const InfoEditor = () => {
                 <div className="space-y-2">
                   <Label>Version</Label>
                   <Input
-                    value={info.version}
-                    onChange={(e) =>
-                      setInfo({ ...info, version: e.target.value })
-                    }
+                    value={openApi.info?.version ?? ""}
+                    onChange={(e) => updateInfo({ version: e.target.value })}
                     placeholder="1.0.0"
                     className="font-mono"
                   />
@@ -73,9 +71,9 @@ export const InfoEditor = () => {
                 <div className="col-span-2 space-y-2">
                   <Label>Description</Label>
                   <Input
-                    value={info.description}
+                    value={openApi.info?.description ?? ""}
                     onChange={(e) =>
-                      setInfo({ ...info, description: e.target.value })
+                      updateInfo({ description: e.target.value })
                     }
                     placeholder="A detailed description of your API"
                   />
@@ -93,11 +91,13 @@ export const InfoEditor = () => {
                 <div className="space-y-2">
                   <Label>Name</Label>
                   <Input
-                    value={info.contact?.name}
+                    value={openApi.info?.contact?.name ?? ""}
                     onChange={(e) =>
-                      setInfo({
-                        ...info,
-                        contact: { ...info.contact, name: e.target.value },
+                      updateInfo({
+                        contact: {
+                          ...openApi.info?.contact,
+                          name: e.target.value,
+                        },
                       })
                     }
                     placeholder="John Doe"
@@ -108,11 +108,13 @@ export const InfoEditor = () => {
                   <div className="relative">
                     <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                     <Input
-                      value={info.contact?.email}
+                      value={openApi.info?.contact?.email ?? ""}
                       onChange={(e) =>
-                        setInfo({
-                          ...info,
-                          contact: { ...info.contact, email: e.target.value },
+                        updateInfo({
+                          contact: {
+                            ...openApi.info?.contact,
+                            email: e.target.value,
+                          },
                         })
                       }
                       placeholder="contact@example.com"
@@ -125,11 +127,13 @@ export const InfoEditor = () => {
                   <div className="relative">
                     <Link className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                     <Input
-                      value={info.contact?.url}
+                      value={openApi.info?.contact?.url ?? ""}
                       onChange={(e) =>
-                        setInfo({
-                          ...info,
-                          contact: { ...info.contact, url: e.target.value },
+                        updateInfo({
+                          contact: {
+                            ...openApi.info?.contact,
+                            url: e.target.value,
+                          },
                         })
                       }
                       placeholder="https://example.com/contact"
@@ -150,11 +154,13 @@ export const InfoEditor = () => {
                 <div className="space-y-2">
                   <Label>Name</Label>
                   <Input
-                    value={info.license?.name}
+                    value={openApi.info?.license?.name ?? ""}
                     onChange={(e) =>
-                      setInfo({
-                        ...info,
-                        license: { ...info.license, name: e.target.value },
+                      updateInfo({
+                        license: {
+                          ...openApi.info?.license,
+                          name: e.target.value,
+                        },
                       })
                     }
                     placeholder="MIT"
@@ -165,11 +171,14 @@ export const InfoEditor = () => {
                   <div className="relative">
                     <Link className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                     <Input
-                      value={info.license?.url}
+                      value={openApi.info?.license?.url ?? ""}
                       onChange={(e) =>
-                        setInfo({
-                          ...info,
-                          license: { ...info.license, name: info.license?.name ?? "", url: e.target.value },
+                        updateInfo({
+                          license: {
+                            ...openApi.info?.license,
+                            name: openApi.info?.license?.name ?? "MIT",
+                            url: e.target.value,
+                          },
                         })
                       }
                       placeholder="https://opensource.org/licenses/MIT"
@@ -191,9 +200,9 @@ export const InfoEditor = () => {
                 <div className="relative">
                   <Link className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                   <Input
-                    value={info.termsOfService}
+                    value={openApi.info?.termsOfService ?? ""}
                     onChange={(e) =>
-                      setInfo({ ...info, termsOfService: e.target.value })
+                      updateInfo({ termsOfService: e.target.value })
                     }
                     placeholder="https://example.com/terms"
                     className="pl-10"
@@ -207,4 +216,3 @@ export const InfoEditor = () => {
     </div>
   );
 };
-
