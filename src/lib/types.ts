@@ -1,4 +1,5 @@
 import { STATUS } from "./constants";
+import { OpenAPIV3 } from "openapi-types";
 
 export type Api = {
   id: number;
@@ -19,4 +20,8 @@ export type Status = (typeof STATUS)[keyof typeof STATUS];
 export type StatusWithColor = {
   status: Status;
   color: string;
-}
+};
+
+export type PathOperation = OpenAPIV3.OperationObject & {
+  summary?: string;
+};

@@ -22,8 +22,15 @@ export default tseslint.config(
       'react-refresh/only-export-components': [
         'warn',
         { allowConstantExport: true },
-
       ],
     },
+    overrides: [
+      {
+        files: ['src/ts/**/*.ts'],
+        rules: {
+          '@typescript-eslint/no-explicit-any': 'off',
+        },
+      },
+    ],
   },
 )
