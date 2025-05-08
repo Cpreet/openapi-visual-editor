@@ -5,6 +5,7 @@ import AppSidebar from "./components/app-sidebar"
 import Toolbar from "./components/toolbar"
 import SchemaViewer from "./components/schema-viewer"
 import { ServerEditor } from "./components/server-editor"
+import { InfoEditor } from "./components/info-editor"
 
 function App() {
 
@@ -18,6 +19,7 @@ function App() {
             <main>
               <Routes>
                 <Route path="/" element={<SchemaViewer />} />
+                <Route path="/info" element={<InfoEditor />} />
                 <Route path="/servers" element={<ServerEditor />} />
               </Routes>
             </main>
