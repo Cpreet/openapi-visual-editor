@@ -1,9 +1,9 @@
 import type { OpenAPIV3 } from "openapi-types";
 
 import { useOpenApiStore } from "@/lib/store";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
-import { ScrollArea } from "./ui/scroll-area";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { FileText, Mail, Link, User, Shield } from "lucide-react";
 
 export const InfoEditor = () => {
