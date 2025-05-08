@@ -13,7 +13,6 @@ import { HTTP_METHOD_COLORS } from "@/lib/constants";
 import { sanitizeMarkdownOrHtml } from "@/lib/utils";
 import { RequestForm } from "./request-form";
 import { ResponseViewer } from "./response-viewer";
-import { Separator } from "../ui/separator";
 
 interface PathItemProps {
   path: string;
