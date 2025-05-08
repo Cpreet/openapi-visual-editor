@@ -7,6 +7,7 @@ import SchemaViewer from "./components/schema-viewer";
 import { ServerEditor } from "./components/server-editor";
 import { InfoEditor } from "./components/info-editor";
 import PathEditor from "./components/path-editor";
+import ComponentEditor from "./components/component-editor";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
                 <Route path="/info" element={<InfoEditor />} />
                 <Route path="/servers" element={<ServerEditor />} />
                 <Route path="/paths" element={<PathEditor />} />
+                <Route path="/components" element={<ComponentEditor />} />
               </Routes>
             </main>
           </SidebarInset>
