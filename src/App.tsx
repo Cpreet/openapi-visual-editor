@@ -8,6 +8,7 @@ import { ServerEditor } from "./components/server-editor";
 import { InfoEditor } from "./components/info-editor";
 import PathEditor from "./components/path-editor";
 import ComponentEditor from "./components/component-editor";
+import TagEditor from "./components/tag-editor";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
                 <Route path="/servers" element={<ServerEditor />} />
                 <Route path="/paths" element={<PathEditor />} />
                 <Route path="/components" element={<ComponentEditor />} />
+                <Route path="/tags" element={<TagEditor />} />
               </Routes>
             </main>
           </SidebarInset>
